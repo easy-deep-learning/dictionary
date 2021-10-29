@@ -1,11 +1,10 @@
 {
   "name": "programming-learning-path",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "learning path creation web service",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start-server": "nodenv --exec nodemon"
+    "start-server": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -18,12 +17,10 @@
   },
   "homepage": "https://github.com/easy-deep-learning/programming-learning-path#readme",
   "dependencies": {
-    "@logux/server": "^0.5.1",
-    "migrate-mongoose": "^4.0.0",
-    "mongoose": "^5.7.1"
+    "@logux/server": "^0.10.6",
+    "mongoose": "^6.0.12"
   },
   "devDependencies": {
-    "node-env-run": "^3.0.2",
-    "nodemon": "^1.19.2"
+    "nodemon": "^2.0.14"
   }
 }
