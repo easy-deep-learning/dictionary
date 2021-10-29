@@ -1,6 +1,8 @@
 {
   "name": "programming-learning-path",
   "version": "1.0.0",
+  "private": true,
+  "type": "module",
   "description": "learning path creation web service",
   "main": "src/index.js",
   "scripts": {
