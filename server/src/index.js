@@ -1,4 +1,6 @@
 import { Server } from '@logux/server'
+import bcrypt from 'bcrypt'
+import jwt from'jwt-simple'
 
 const server = new Server(
   Server.loadOptions(process, {
