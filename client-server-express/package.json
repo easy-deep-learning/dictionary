@@ -6,7 +6,8 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "start-server": "env $(cat ./.env) nodemon"
+    "start-server": "env $(cat ./.env) nodemon",
+    "start": "node src/index.js"
   },
   "author": "",
   "license": "ISC",

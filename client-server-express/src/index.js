@@ -36,7 +36,7 @@ app.get('/profile', requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user))
 })
 
-app.get('/words/:word_part', requiresAuth(), (req, res) => {
+app.get('/words/:word_part', /*requiresAuth(),*/ (req, res) => {
   console.log("req.params: ", req.params.word_part); // eslint-disable-line
   Word.find({}, (err, result) => res.send(result))
 })
@@ -44,9 +44,7 @@ app.get('/words/:word_part', requiresAuth(), (req, res) => {
 app.use(bodyParser.json())
 
 app.post('/words', /*requiresAuth(),*/ (req, res) => {
-  console.log("req.body: ", req.body); // eslint-disable-line
-  
-  const word = new Word()
+  const word = new Word({...req.body})
   word.save((err, result) => res.send(result))
 })
 
