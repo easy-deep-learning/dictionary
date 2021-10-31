@@ -36,9 +36,12 @@ app.get('/profile', requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user))
 })
 
-app.get('/words/:word_part', /*requiresAuth(),*/ (req, res) => {
-  console.log("req.params: ", req.params.word_part); // eslint-disable-line
+app.get('/words/', /*requiresAuth(),*/ (req, res) => {
   Word.find({}, (err, result) => res.send(result))
+})
+
+app.get('/words/:word', /*requiresAuth(),*/ (req, res) => {
+  Word.findOne({word: req.params.word}, (err, result) => res.send(result))
 })
 
 app.use(bodyParser.json())
