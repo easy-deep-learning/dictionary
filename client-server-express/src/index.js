@@ -50,7 +50,9 @@ app.get('/words/:word', /*requiresAuth(),*/ (req, res) => {
 })
 
 app.get('/search', /*requiresAuth(),*/ (req, res) => {
-  Word.findOne({word: req.query}, (err, result) => res.send(result))
+  Word.findOne({word: req.query}, (err, result) => {
+    res.render('pages/serp', { result })
+  })
 })
 
 app.use(bodyParser.json())

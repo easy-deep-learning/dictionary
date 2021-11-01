@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head'); %>
+</head>
+<body class="container">
+
+<header>
+  <h1>Словарь</h1>
+</header>
+
+<main class="main">
+  <div class="container-fluid">
+    <%- include('../partials/wordSearchForm', { result }) %>
+  </div>
+  
+  <div class="result">
+    <% result.translations['ru-RU'].forEach( (translation) => { %>
+    <p><%= translation %></p>
+    <% }) %>
+  </div>
+</main>
+
+<footer>
+  <%- include('../partials/footer'); %>
+</footer>
+
+</body>
+</html>
