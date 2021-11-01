@@ -49,6 +49,10 @@ app.get('/words/:word', /*requiresAuth(),*/ (req, res) => {
   Word.findOne({word: req.params.word}, (err, result) => res.send(result))
 })
 
+app.get('/search', /*requiresAuth(),*/ (req, res) => {
+  Word.findOne({word: req.query}, (err, result) => res.send(result))
+})
+
 app.use(bodyParser.json())
 
 app.post('/words', /*requiresAuth(),*/ (req, res) => {
