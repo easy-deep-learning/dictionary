@@ -1,15 +1,23 @@
 import express from 'express'
-import pkg from 'express-openid-connect';
-const { auth, requiresAuth } = pkg;
-import { dirname } from 'path'
+
+import pkg from 'express-openid-connect'
+const { auth, requiresAuth } = pkg
+
+import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import bodyParser from 'body-parser'
 
-import { dbConnection, Word } from './models/index.js'
+import { dbConnection, Word } from './models/index.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const app = express()
+
+/**
+ * @see https://ejs.co/#docs
+ * */
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'ejs')
 
 const config = {
   authRequired: false,
@@ -23,13 +31,10 @@ const config = {
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config))
 
-app.use('/static', express.static('public'))
-
-
 // req.isAuthenticated is provided from the auth router
 app.get('/', (req, res) => {
   // res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out')
-  res.sendFile(__dirname + '/views/index.html');
+  res.render('pages/index')
 })
 
 app.get('/profile', requiresAuth(), (req, res) => {
