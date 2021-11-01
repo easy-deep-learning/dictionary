@@ -50,7 +50,7 @@ app.get('/words/:word', /*requiresAuth(),*/ (req, res) => {
 })
 
 app.get('/search', /*requiresAuth(),*/ (req, res) => {
-  Word.findOne({word: req.query}, (err, result) => {
+  Word.findOne(req.query, (err, result) => {
     res.render('pages/serp', { result })
   })
 })
@@ -58,6 +58,8 @@ app.get('/search', /*requiresAuth(),*/ (req, res) => {
 app.use(bodyParser.json())
 
 app.post('/words', /*requiresAuth(),*/ (req, res) => {
+  console.log("req.body: ", req.body); // eslint-disable-line
+  
   const word = new Word({...req.body})
   word.save((err, result) => res.send(result))
 })

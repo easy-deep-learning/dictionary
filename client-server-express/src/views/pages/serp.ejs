@@ -10,15 +10,22 @@
 </header>
 
 <main class="main">
+
+  <% if(result) { %>
   <div class="container-fluid">
     <%- include('../partials/wordSearchForm', { result }) %>
   </div>
+
+    <div class="result">
+      <% result?.translations.forEach( (translation) => { %>
+        <p><%= translation %></p>
+      <% }) %>
+    </div>
+  <% } %>
   
-  <div class="result">
-    <% result.translations['ru-RU'].forEach( (translation) => { %>
-    <p><%= translation %></p>
-    <% }) %>
-  </div>
+  <% if(!result) { %>
+    <%- include('../partials/wordEditForm') %>
+  <% } %>
 </main>
 
 <footer>

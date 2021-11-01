@@ -1,16 +1,15 @@
 import mongoose from 'mongoose'
 
 const Schema = new mongoose.Schema({
-  translations: {
-    'ru-RU': {}
-  },
+  translations: Array,
+  word: String,
   synonyms: Array,
-  examples: {
-    'ru-RU': {
+  examples: [
+    {
       text: String,
       source: String,
     }
-  }
+  ]
 })
 
 const Word = mongoose.model('Word', Schema)
