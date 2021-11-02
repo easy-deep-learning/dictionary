@@ -7,7 +7,7 @@ import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import bodyParser from 'body-parser'
 
-import { dbConnection, Word } from './models/index.mjs'
+import { dbConnection, Word, User } from './models/index.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -34,7 +34,45 @@ app.use(auth(config))
 // req.isAuthenticated is provided from the auth router
 app.get('/', (req, res) => {
   // res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out')
-  res.render('pages/index', {result: null})
+  
+  if (req.oidc.isAuthenticated()) {
+    User
+    .findOne({ 'profile.email': req.oidc.user?.email })
+    .then(user => {
+      if (!user) {
+        const {
+          given_name,
+          family_name,
+          nickname,
+          name,
+          picture,
+          email,
+        } = req.oidc.user
+        
+        const user = new User({
+          groups: [],
+          profile: {
+            email,
+            first_name: given_name,
+            last_name: family_name,
+            username: nickname,
+            photo_url: picture,
+            created_at: Date.now(),
+          }
+        })
+
+        user.save().then(() => {
+          res.locals.user = user.toJSON()
+          res.render('pages/index', {result: null, user: res.locals.user})
+        })
+      } else {
+        res.locals.user = user.toJSON()
+        res.render('pages/index', {result: null, user: res.locals.user})
+      }
+    })
+  } else {
+    res.render('pages/index', {result: null, user: null})
+  }
 })
 
 app.get('/profile', requiresAuth(), (req, res) => {
