@@ -1,17 +1,24 @@
-<form class="word-edit-form row" action="/words" method="post">
+<form class="word-edit-form" action="/words" method="post">
+    <div class="row mb-3">
     <div class="col">
         <label for="word" class="form-label">слово</label>
         <input type="text" value="" class="form-control" id="word" name="word">
 
         <label for="translations" class="form-label">перевод, слова разделенные запятыми</label>
         <textarea class="form-control" id="translations" name="translations"></textarea>
+
+        <fieldset>
+            <legend>Примеры</legend>
+            <textarea class="form-control word-example" name="example_1"></textarea>
+            <div><button type="button"class="btn js-add-example">Добавить пример</button></div>
+        </fieldset>
     </div>
     <div class="col"><button type="submit" class="btn btn-primary">Сохранить</button></div>
+    </div>
 </form>
 
 <script>
   (() => {
-    
     const form = document.querySelector('.word-edit-form')
     form.addEventListener('submit', async (e) => {
       e.preventDefault()
@@ -38,6 +45,22 @@
 
       console.log("result.message: ", result.message); // eslint-disable-line
     })
+  })();
+  
+  (() => {
+    const addExampleButton = document.querySelector('.js-add-example')
+    const exampleTextarea = document.querySelectorAll('.word-example')
+    let examplesCount = exampleTextarea.length
+
+    addExampleButton.addEventListener('click', () => {
+      const lastExampleElem = exampleTextarea[exampleTextarea.length - 1]
+      const newExampleElem = lastExampleElem.cloneNode()
+
+      newExampleElem.setAttribute('name', `example_${++examplesCount}`)
+      newExampleElem.innerText = ''
+      
+      lastExampleElem.after(newExampleElem)
+    })
     
-  })()
+  })();
 </script>

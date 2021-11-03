@@ -1,7 +1,10 @@
 import express from 'express'
 
+/**
+ * @see https://auth0.github.io/express-openid-connect/
+ * */
 import pkg from 'express-openid-connect'
-const { auth, requiresAuth } = pkg
+const { auth, requiresAuth, claimIncludes } = pkg
 
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
@@ -31,10 +34,7 @@ const config = {
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config))
 
-// req.isAuthenticated is provided from the auth router
-app.get('/', (req, res) => {
-  // res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out')
-  
+app.use((req, res, next) => {
   if (req.oidc.isAuthenticated()) {
     User
     .findOne({ 'profile.email': req.oidc.user?.email })
@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
           picture,
           email,
         } = req.oidc.user
-        
+
         const user = new User({
           groups: [],
           profile: {
@@ -67,35 +67,40 @@ app.get('/', (req, res) => {
         })
       } else {
         res.locals.user = user.toJSON()
-        res.render('pages/index', {result: null, user: res.locals.user})
+        next()
       }
     })
   } else {
-    res.render('pages/index', {result: null, user: null})
+    next()
   }
+})
+
+// req.isAuthenticated is provided from the auth router
+app.get('/', (req, res) => {
+  res.render('pages/index', {result: null, user: res.locals.user})
 })
 
 app.get('/profile', requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user))
 })
 
-app.get('/words/', /*requiresAuth(),*/ (req, res) => {
+app.get('/words/',  (req, res) => {
   Word.find({}, (err, result) => res.send(result))
 })
 
-app.get('/words/:word', /*requiresAuth(),*/ (req, res) => {
+app.get('/words/:word', (req, res) => {
   Word.findOne({word: req.params.word}, (err, result) => res.send(result))
 })
 
-app.get('/search', /*requiresAuth(),*/ (req, res) => {
+app.get('/search', (req, res) => {
   Word.findOne(req.query, (err, result) => {
-    res.render('pages/serp', { result })
+    res.render('pages/serp', { result, user: res.locals.user, retPath: req.originalUrl })
   })
 })
 
 app.use(bodyParser.json())
 
-app.post('/words', /*requiresAuth(),*/ (req, res) => {
+app.post('/words', claimIncludes('editor'), (req, res) => {
   console.log("req.body: ", req.body); // eslint-disable-line
   
   const word = new Word({...req.body})
