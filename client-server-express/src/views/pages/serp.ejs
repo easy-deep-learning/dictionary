@@ -23,8 +23,12 @@
     </div>
   <% } %>
   
-  <% if(!result) { %>
+  <% if(!result && user) { %>
     <%- include('../partials/wordEditForm') %>
+  <% } else { %>
+      <div class="alert alert-warning" role="alert">
+        <a href="/login?retPath=<%= retPath %>">Войдите, чтобы добавить слово</a>
+      </div>
   <% } %>
 </main>
 
