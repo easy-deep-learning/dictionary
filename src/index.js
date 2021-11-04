@@ -60,7 +60,7 @@ app.use((req, res, next) => {
   } else {
     next()
   }
-});
+})
 
 const rulesMap = new Map([['editWords', 'editors']])
 
