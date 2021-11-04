@@ -3,11 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "private": true,
-  "type": "module",
   "main": "src/index.js",
   "scripts": {
     "start-server": "env $(cat ./.env) nodemon",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "codestyle": "prettier --write src",
+    "lint": "eslint src"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,md}": "prettier --write"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +28,13 @@
     "mongoose": "^6.0.12"
   },
   "devDependencies": {
-    "nodemon": "^2.0.14"
+    "eslint": "^8.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^11.2.6",
+    "nodemon": "^2.0.14",
+    "prettier": "^2.4.1",
+    "standard": "^16.0.4"
   }
 }

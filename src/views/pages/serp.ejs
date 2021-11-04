@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include('../partials/head'); %>
+    <%- include('../partials/head'); %>
 </head>
 <body class="container">
 
 <header>
-  <%- include('../partials/header.ejs', { user }) %>
+    <%- include('../partials/header.ejs', { user }) %>
 </header>
 
 <main class="main">
 
-  <% if(result) { %>
-  <div class="container-fluid">
-    <%- include('../partials/wordSearchForm', { result }) %>
-  </div>
+    <% if(result) { %>
+        <div class="container-fluid">
+            <%- include('../partials/wordSearchForm', { result }) %>
+        </div>
 
-    <div class="result">
-      <% result?.translations.forEach( (translation) => { %>
-        <p><%= translation %></p>
-      <% }) %>
-    </div>
-  <% } %>
-  
-  <% if(!result && user) { %>
-    <%- include('../partials/wordEditForm') %>
-  <% } else if(!result && !user) { %>
-      <div class="alert alert-warning" role="alert">
-        <a href="/login?retPath=<%= retPath %>">Войдите, чтобы добавить слово</a>
-      </div>
-  <% } %>
+        <div class="result">
+            <% result?.translations.forEach( (translation) => { %>
+                <p><%= translation %></p>
+            <% }) %>
+        </div>
+    <% } %>
+
+    <% if(!result && user) { %>
+        <%- include('../partials/wordEditForm') %>
+    <% } else if(!result && !user) { %>
+        <div class="alert alert-warning" role="alert">
+            <a href="/login?retPath=<%= retPath %>">Войдите, чтобы добавить слово</a>
+        </div>
+    <% } %>
 </main>
 
 <footer>
-  <%- include('../partials/footer'); %>
+    <%- include('../partials/footer'); %>
 </footer>
 
 </body>

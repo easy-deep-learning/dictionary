@@ -1,7 +1,7 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 
-import User from './user.js'
-import { Word } from './word.js'
+const User = require('./user')
+const { Word } = require('./word')
 
 /**
  * @see https://mongoosejs.com/docs/index.html
@@ -11,8 +11,7 @@ import { Word } from './word.js'
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true })
 const dbConnection = mongoose.connection
 
-
-export {
+module.exports = {
   Word,
   User,
   dbConnection,

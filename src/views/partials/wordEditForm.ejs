@@ -1,19 +1,23 @@
 <form class="word-edit-form" action="/words" method="post">
     <div class="row mb-3">
-    <div class="col">
-        <label for="word" class="form-label">слово</label>
-        <input type="text" value="" class="form-control" id="word" name="word">
+        <div class="col">
+            <label for="word" class="form-label">слово</label>
+            <input type="text" value="" class="form-control" id="word" name="word">
 
-        <label for="translations" class="form-label">перевод, слова разделенные запятыми</label>
-        <textarea class="form-control" id="translations" name="translations"></textarea>
+            <label for="translations" class="form-label">перевод, слова разделенные запятыми</label>
+            <textarea class="form-control" id="translations" name="translations"></textarea>
 
-        <fieldset>
-            <legend>Примеры</legend>
-            <textarea class="form-control word-example" name="example"></textarea>
-            <div><button type="button"class="btn js-add-example">Добавить пример</button></div>
-        </fieldset>
-    </div>
-    <div class="col"><button type="submit" class="btn btn-primary">Сохранить</button></div>
+            <fieldset>
+                <legend>Примеры</legend>
+                <textarea class="form-control word-example" name="example"></textarea>
+                <div>
+                    <button type="button" class="btn js-add-example">Добавить пример</button>
+                </div>
+            </fieldset>
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
     </div>
 </form>
 
@@ -24,7 +28,7 @@
       e.preventDefault()
 
       const formData = new FormData(e.target)
-      
+
       const body = {
         translations: formData.get('translations').split(',').map(word => word.trim()),
         synonyms: [],
@@ -38,15 +42,15 @@
           'Accept': 'application/json',
         },
         method: 'POST',
-        body: JSON.stringify(body)
-      });
+        body: JSON.stringify(body),
+      })
 
-      let result = await response.json();
+      let result = await response.json()
 
-      console.log("result: ", result); // eslint-disable-line
+      console.log('result: ', result) // eslint-disable-line
     })
   })();
-  
+
   (() => {
     const addExampleButton = document.querySelector('.js-add-example')
 
@@ -57,9 +61,9 @@
 
       newExampleElem.setAttribute('name', `example`)
       newExampleElem.value = ''
-      
+
       lastExampleElem.after(newExampleElem)
     })
-    
-  })();
+
+  })()
 </script>

@@ -1,18 +1,13 @@
-import express from 'express'
+const bodyParser = require('body-parser')
+const express = require('express')
 
 /**
  * @see https://auth0.github.io/express-openid-connect/
  * */
-import pkg from 'express-openid-connect'
-const { auth, requiresAuth, claimIncludes } = pkg
+const { auth, requiresAuth } = require('express-openid-connect')
+const path = require('path')
 
-import path, { dirname } from 'path'
-import { fileURLToPath } from 'url'
-import bodyParser from 'body-parser'
-
-import { dbConnection, Word, User } from './models/index.mjs'
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
+const { dbConnection, User, Word } = require('./models')
 
 const app = express()
 
@@ -28,7 +23,7 @@ const config = {
   secret: process.env.AUTH0_SECRET,
   baseURL: process.env.AUTH0_BASE_URL,
   clientID: process.env.AUTH0_CLIENT_ID,
-  issuerBaseURL: 'https://dev-yf-kf5ze.us.auth0.com'
+  issuerBaseURL: 'https://dev-yf-kf5ze.us.auth0.com',
 }
 
 // auth router attaches /login, /logout, and /callback routes to the baseURL
@@ -36,18 +31,10 @@ app.use(auth(config))
 
 app.use((req, res, next) => {
   if (req.oidc.isAuthenticated()) {
-    User
-    .findOne({ 'profile.email': req.oidc.user?.email })
-    .then(user => {
+    User.findOne({ 'profile.email': req.oidc.user?.email }).then((user) => {
       if (!user) {
-        const {
-          given_name,
-          family_name,
-          nickname,
-          name,
-          picture,
-          email,
-        } = req.oidc.user
+        const { given_name, family_name, nickname, picture, email } =
+          req.oidc.user
 
         const user = new User({
           groups: [],
@@ -58,12 +45,12 @@ app.use((req, res, next) => {
             username: nickname,
             photo_url: picture,
             created_at: Date.now(),
-          }
+          },
         })
 
         user.save().then(() => {
           res.locals.user = user.toJSON()
-          res.render('pages/index', {result: null, user: res.locals.user})
+          res.render('pages/index', { result: null, user: res.locals.user })
         })
       } else {
         res.locals.user = user.toJSON()
@@ -75,23 +62,22 @@ app.use((req, res, next) => {
   }
 })
 
-const rulesMap = new Map([
-  ['editWords', 'editors']
-])
+const rulesMap = new Map([['editWords', 'editors']])
 
 class UnauthorizedError extends Error {
   constructor(message) {
-    super(message);
-    this.name = "UnauthorizedError"
-    this.message = message || "You must be authenticated to do this action"
+    super(message)
+    this.name = 'UnauthorizedError'
+    this.message = message || 'You must be authenticated to do this action'
     this.status = 401
   }
 }
+
 class ValidationError extends Error {
   constructor(message) {
-    super(message);
-    this.name = "ValidationError"
-    this.message = message || "You have no right to do this action"
+    super(message)
+    this.name = 'ValidationError'
+    this.message = message || 'You have no right to do this action'
     this.status = 403
   }
 }
@@ -112,24 +98,28 @@ const authorizeForAction = (params) => (req, res, next) => {
 
 /* GET Routes */
 app.get('/', (req, res) => {
-  res.render('pages/index', {result: null, user: res.locals.user})
+  res.render('pages/index', { result: null, user: res.locals.user })
 })
 
 app.get('/profile', requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user))
 })
 
-app.get('/words/',  (req, res) => {
+app.get('/words/', (req, res) => {
   Word.find({}, (err, result) => res.send(result))
 })
 
 app.get('/words/:word', (req, res) => {
-  Word.findOne({word: req.params.word}, (err, result) => res.send(result))
+  Word.findOne({ word: req.params.word }, (err, result) => res.send(result))
 })
 
 app.get('/search', (req, res) => {
   Word.findOne(req.query, (err, result) => {
-    res.render('pages/serp', { result, user: res.locals.user, retPath: req.originalUrl })
+    res.render('pages/serp', {
+      result,
+      user: res.locals.user,
+      retPath: req.originalUrl,
+    })
   })
 })
 
@@ -137,7 +127,7 @@ app.get('/search', (req, res) => {
 app.use(bodyParser.json())
 
 app.post('/words', authorizeForAction({ action: 'editWords' }), (req, res) => {
-  const word = new Word({...req.body})
+  const word = new Word({ ...req.body })
   word.save((err, result) => {
     if (err) {
       res.status(500).send({ error: err })
@@ -149,7 +139,6 @@ app.post('/words', authorizeForAction({ action: 'editWords' }), (req, res) => {
 
 const jsonClientsErrorHandler = (err, req, res, next) => {
   if (req.xhr || req.headers.accept === 'application/json') {
-    
     switch (err.name) {
       case 'UnauthorizedError':
         res.status(err.status).send({ error: err.message })
@@ -167,9 +156,8 @@ const jsonClientsErrorHandler = (err, req, res, next) => {
 app.use(jsonClientsErrorHandler)
 
 dbConnection.once('open', () => {
-  console.log('mongo connection established'); // eslint-disable-line
+  console.log('mongo connection established') // eslint-disable-line
   app.listen(process.env.PORT, () => {
     console.log(`Example app listening at http://localhost:${process.env.PORT}`)
   })
 })
-

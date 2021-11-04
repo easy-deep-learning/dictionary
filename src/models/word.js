@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 
 const Schema = new mongoose.Schema({
   translations: Array,
@@ -8,12 +8,10 @@ const Schema = new mongoose.Schema({
     {
       text: String,
       source: String,
-    }
-  ]
+    },
+  ],
 })
 
 const Word = mongoose.model('Word', Schema)
 
-export {
-  Word
-}
+module.exports = { Word }
