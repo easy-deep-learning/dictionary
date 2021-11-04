@@ -7,20 +7,7 @@
 <body>
 
 <header>
-  <div class="container">
-    <div class="row">
-      <div class="col col-9">
-        <h1>Словарь</h1>
-      </div>
-      <div class="col col-3">
-        <% if (user) { %>
-          <%- include('../partials/user', { user }) %>
-        <% } else { %>
-          <%- include('../partials/login') %>
-        <% } %>
-      </div>
-    </div>
-  </div>
+  <%- include('../partials/header.ejs', { user }) %>
 </header>
 
 <main class="main">

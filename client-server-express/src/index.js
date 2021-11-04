@@ -75,7 +75,42 @@ app.use((req, res, next) => {
   }
 })
 
-// req.isAuthenticated is provided from the auth router
+const rulesMap = new Map([
+  ['editWords', 'editors']
+])
+
+class UnauthorizedError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "UnauthorizedError"
+    this.message = message || "You must be authenticated to do this action"
+    this.status = 401
+  }
+}
+class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ValidationError"
+    this.message = message || "You have no right to do this action"
+    this.status = 403
+  }
+}
+
+const authorizeForAction = (params) => (req, res, next) => {
+  const { action } = params
+
+  if (res.locals?.user) {
+    if (res.locals.user.groups.includes(rulesMap.get(action))) {
+      next()
+    } else {
+      throw new ValidationError()
+    }
+  } else {
+    throw new UnauthorizedError()
+  }
+}
+
+/* GET Routes */
 app.get('/', (req, res) => {
   res.render('pages/index', {result: null, user: res.locals.user})
 })
@@ -98,14 +133,38 @@ app.get('/search', (req, res) => {
   })
 })
 
+/* POST Routes */
 app.use(bodyParser.json())
 
-app.post('/words', claimIncludes('editor'), (req, res) => {
-  console.log("req.body: ", req.body); // eslint-disable-line
-  
+app.post('/words', authorizeForAction({ action: 'editWords' }), (req, res) => {
   const word = new Word({...req.body})
-  word.save((err, result) => res.send(result))
+  word.save((err, result) => {
+    if (err) {
+      res.status(500).send({ error: err })
+    } else {
+      res.send(result)
+    }
+  })
 })
+
+const jsonClientsErrorHandler = (err, req, res, next) => {
+  if (req.xhr || req.headers.accept === 'application/json') {
+    
+    switch (err.name) {
+      case 'UnauthorizedError':
+        res.status(err.status).send({ error: err.message })
+        break
+      case 'ValidationError':
+        res.status(err.status).send({ error: err.message })
+        break
+      default:
+        res.status(500).send({ error: 'Something failed!' })
+    }
+  } else {
+    next(err)
+  }
+}
+app.use(jsonClientsErrorHandler)
 
 dbConnection.once('open', () => {
   console.log('mongo connection established'); // eslint-disable-line
