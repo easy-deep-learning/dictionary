@@ -9,7 +9,7 @@
 
         <fieldset>
             <legend>Примеры</legend>
-            <textarea class="form-control word-example" name="example_1"></textarea>
+            <textarea class="form-control word-example" name="example"></textarea>
             <div><button type="button"class="btn js-add-example">Добавить пример</button></div>
         </fieldset>
     </div>
@@ -28,7 +28,7 @@
       const body = {
         translations: formData.get('translations').split(',').map(word => word.trim()),
         synonyms: [],
-        examples: [],
+        examples: formData.getAll('example')?.map(example => ({ text: example })),
         word: formData.get('word'),
       }
 
@@ -43,21 +43,20 @@
 
       let result = await response.json();
 
-      console.log("result.message: ", result.message); // eslint-disable-line
+      console.log("result: ", result); // eslint-disable-line
     })
   })();
   
   (() => {
     const addExampleButton = document.querySelector('.js-add-example')
-    const exampleTextarea = document.querySelectorAll('.word-example')
-    let examplesCount = exampleTextarea.length
 
     addExampleButton.addEventListener('click', () => {
+      const exampleTextarea = document.querySelectorAll('.word-example')
       const lastExampleElem = exampleTextarea[exampleTextarea.length - 1]
       const newExampleElem = lastExampleElem.cloneNode()
 
-      newExampleElem.setAttribute('name', `example_${++examplesCount}`)
-      newExampleElem.innerText = ''
+      newExampleElem.setAttribute('name', `example`)
+      newExampleElem.value = ''
       
       lastExampleElem.after(newExampleElem)
     })
