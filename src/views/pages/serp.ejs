@@ -11,7 +11,7 @@
 
 <main class="main">
 
-    <% if(result) { %>
+    <% if(result?.length > 0) { %>
         <div class="container-fluid">
             <%- include('../partials/wordSearchForm', { result, query }) %>
         </div>
@@ -21,9 +21,9 @@
         </div>
     <% } %>
 
-    <% if(!result && user) { %>
-        <%- include('../partials/wordEditForm') %>
-    <% } else if(!result && !user) { %>
+    <% if(result?.length === 0 && user) { %>
+        <%- include('../partials/wordEditForm', { wordItem: { word: query?.word } }) %>
+    <% } else if(result?.length === 0 && !user) { %>
         <div class="alert alert-warning" role="alert">
             <a href="/login?retPath=<%= retPath %>">Войдите, чтобы добавить слово</a>
         </div>

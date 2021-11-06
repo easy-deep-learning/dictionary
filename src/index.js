@@ -138,6 +138,19 @@ app.post('/words', authorizeForAction({ action: 'editWords' }), (req, res) => {
   })
 })
 
+app.patch('/words/:word', (req, res) => {
+  Word.findOneAndUpdate({ word: req.params.word }, req.body, {
+    returnDocument: 'after',
+  })
+    .lean()
+    .then((dbResult) => {
+      res.send(dbResult)
+    })
+    .catch((dbError) => {
+      res.status(500).send({ error: dbError })
+    })
+})
+
 const jsonClientsErrorHandler = (err, req, res, next) => {
   if (req.xhr || req.headers.accept === 'application/json') {
     switch (err.name) {

@@ -1,31 +1,74 @@
-<div class="card word-item">
-    <div class="card-body">
-        <h5 class="card-title">Перевод</h5>
-        <ul class="list-group list-group-flush">
-            <% wordItem.translations.forEach( (translation) => { %>
-                <li class="list-group-item">
-                    <p><%= translation %></p>
-                </li>
-            <% }) %>
-        </ul>
-        
-        <h6 class="card-subtitle">Примеры</h6>
-        <ul class="list-group list-group-flush">
-            <% wordItem.examples.forEach( (example) => { %>
-                <li class="list-group-item">
-                    <p><%= example.text %></p>
-                    <% if (example.source) { %><p>Источник: <%= example.source %></p> <% } %>
-                </li>
-            <% }) %>
-        </ul>
+<div class="carousel slide">
+    <div class="carousel-indicators">
+        <button type="button" class="btn button_view">view</button>
+        <button type="button" class="btn button_edit">edit</button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item carousel-item_view active">
+            <div class="word-item">
+                <div class="card-body">
+                    <h5 class="card-title">Перевод</h5>
+                    <ul class="list-group list-group-flush">
+                        <% wordItem.translations.forEach( (translation) => { %>
+                            <li class="list-group-item">
+                                <p><%= translation %></p>
+                            </li>
+                        <% }) %>
+                    </ul>
 
-        <h6 class="card-subtitle">Синонимы</h6>
-        <ul class="list-group list-group-flush">
-            <% wordItem.synonyms.forEach( (synonym) => { %>
-                <li class="list-group-item">
-                    <p><%= synonym %></p>
-                </li>
-            <% }) %>
-        </ul>
+                    <h6 class="card-subtitle">Примеры</h6>
+                    <ul class="list-group list-group-flush">
+                        <% wordItem.examples.forEach( (example) => { %>
+                            <li class="list-group-item">
+                                <p><%= example.text %></p>
+                                <% if (example.source) { %><p>Источник: <%= example.source %></p> <% } %>
+                            </li>
+                        <% }) %>
+                    </ul>
+
+                    <h6 class="card-subtitle">Синонимы</h6>
+                    <ul class="list-group list-group-flush">
+                        <% wordItem.synonyms.forEach( (synonym) => { %>
+                            <li class="list-group-item">
+                                <p><%= synonym %></p>
+                            </li>
+                        <% }) %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item carousel-item_edit">
+            <div class="word-item word-item_edit">
+                <%- include('./wordEditForm', { wordItem }) %>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+  (() => {
+    const carousel = document.querySelector('.carousel')
+    const carouselItemView = document.querySelector('.carousel-item_view')
+    const carouselItemEdit = document.querySelector('.carousel-item_edit')
+
+    const buttonView = carousel.querySelector('.button_view')
+    const buttonEdit = carousel.querySelector('.button_edit')
+
+    buttonView.classList.add('d-none')
+
+    buttonView.addEventListener('click', () => {
+      buttonEdit.classList.remove('d-none')
+      buttonView.classList.add('d-none')
+      carouselItemEdit.classList.remove('active')
+      carouselItemView.classList.add('active')
+    })
+
+    buttonEdit.addEventListener('click', () => {
+      buttonEdit.classList.add('d-none')
+      buttonView.classList.remove('d-none')
+      carouselItemView.classList.remove('active')
+      carouselItemEdit.classList.add('active')
+    })
+    
+  })();
+</script>

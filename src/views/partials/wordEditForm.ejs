@@ -1,16 +1,30 @@
-<form class="word-edit-form" action="/words" method="post">
+<form class="word-edit-form" <% if (wordItem?.word) {%>action="/words/<%= wordItem.word %>" <% } else {  %>action="/words" <% } %>  method="post">
     <div class="row mb-3">
-        <div class="col">
+        <div class="col col-10">
             <label for="word" class="form-label">слово</label>
-            <input type="text" value="" class="form-control" id="word" name="word">
+            <input type="text" value="<%= wordItem?.word %>" class="form-control" id="word" name="word">
 
             <label for="translations" class="form-label">перевод, слова разделенные запятыми</label>
-            <textarea class="form-control" id="translations" name="translations"></textarea>
+
+            <% wordItem.translations?.forEach((translation) => { %>
+                <textarea class="form-control" name="translation"><%= translation %></textarea>
+            <% }) %>
+            
+            <textarea class="form-control" name="translations"></textarea>
 
             <fieldset>
                 <legend>Примеры</legend>
-                <textarea class="form-control word-example" name="example"></textarea>
-                <div>
+                <% wordItem.examples?.forEach((example) => { %>
+                <div class="word-example">
+                    <textarea class="form-control" minlength="1" name="example.text"><%= example.text %></textarea>
+                    <input class="form-control" value="<%= example.source %>" name="example.source" />
+                </div>
+                <% }) %>
+                <div class="word-example">
+                  <textarea class="form-control" placeholder="добавить пример" minlength="1" name="example.text"></textarea>
+                  <input class="form-control" placeholder="добавить источник" name="example.source" />
+                </div>
+                <div style="margin: 10px 0;">
                     <button type="button" class="btn js-add-example">Добавить пример</button>
                 </div>
             </fieldset>
@@ -20,6 +34,12 @@
         </div>
     </div>
 </form>
+
+<style>
+    .word-example {
+      margin-bottom: 25px;
+    }
+</style>
 
 <script>
   (() => {
@@ -32,16 +52,26 @@
       const body = {
         translations: formData.get('translations').split(',').map(word => word.trim()),
         synonyms: [],
-        examples: formData.getAll('example')?.map(example => ({ text: example })),
+        examples: formData.getAll('example.text')?.map((example, index) => ({ text: example, source: formData.getAll('example.source')[index] })),
         word: formData.get('word'),
       }
+        
+      let action = '/words'
+      let method = 'POST'
+       
+      <% if (wordItem?.word) {%>
+      action = '/words/<%= wordItem.word %>'
+      method = 'PATCH'
+      <% } %>
+      
+      console.log("body: ", body); // eslint-disable-line
 
-      let response = await fetch('/words', {
+      let response = await fetch(action, {
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',
         },
-        method: 'POST',
+        method,
         body: JSON.stringify(body),
       })
 
@@ -55,14 +85,14 @@
     const addExampleButton = document.querySelector('.js-add-example')
 
     addExampleButton.addEventListener('click', () => {
-      const exampleTextarea = document.querySelectorAll('.word-example')
-      const lastExampleElem = exampleTextarea[exampleTextarea.length - 1]
-      const newExampleElem = lastExampleElem.cloneNode()
-
-      newExampleElem.setAttribute('name', `example`)
-      newExampleElem.value = ''
-
+      const exampleElem = document.querySelectorAll('.word-example')
+      const lastExampleElem = exampleElem[exampleElem.length - 1]
+      const newExampleElem = lastExampleElem.cloneNode(true)
       lastExampleElem.after(newExampleElem)
+
+      newExampleElem.querySelector('textarea').value = ''
+      newExampleElem.querySelector('input').value = ''
+      
     })
 
   })()
