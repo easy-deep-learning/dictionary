@@ -1,7 +1,7 @@
 <div class="carousel slide">
     <div class="carousel-indicators">
         <button type="button" class="btn button_view">view</button>
-        <button type="button" class="btn button_edit">edit</button>
+        <% if (user) { %><button type="button" class="btn button_edit">edit</button><% } %>
     </div>
     <div class="carousel-inner">
         <div class="carousel-item carousel-item_view active">
@@ -37,11 +37,13 @@
                 </div>
             </div>
         </div>
+        <% if (user) { %>
         <div class="carousel-item carousel-item_edit">
             <div class="word-item word-item_edit">
                 <%- include('./wordEditForm', { wordItem }) %>
             </div>
         </div>
+        <% } %> 
     </div>
 </div>
 
@@ -63,7 +65,7 @@
       carouselItemView.classList.add('active')
     })
 
-    buttonEdit.addEventListener('click', () => {
+    buttonEdit?.addEventListener('click', () => {
       buttonEdit.classList.add('d-none')
       buttonView.classList.remove('d-none')
       carouselItemView.classList.remove('active')
