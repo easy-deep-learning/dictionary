@@ -114,9 +114,10 @@ app.get('/words/:word', (req, res) => {
 })
 
 app.get('/search', (req, res) => {
-  Word.findOne(req.query, (err, result) => {
+  Word.find(req.query, (err, result) => {
     res.render('pages/serp', {
       result,
+      query: req.query,
       user: res.locals.user,
       retPath: req.originalUrl,
     })
