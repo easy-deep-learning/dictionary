@@ -13,13 +13,11 @@
 
     <% if(result) { %>
         <div class="container-fluid">
-            <%- include('../partials/wordSearchForm', { result }) %>
+            <%- include('../partials/wordSearchForm', { result, query }) %>
         </div>
 
         <div class="result">
-            <% result?.translations.forEach( (translation) => { %>
-                <p><%= translation %></p>
-            <% }) %>
+          <%- include('../partials/wordList', { wordList: result }) %>
         </div>
     <% } %>
 
