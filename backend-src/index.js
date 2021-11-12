@@ -11,6 +11,8 @@ const { dbConnection, User, Word } = require('./models')
 
 const app = express()
 
+app.use(express.static('build'))
+
 /**
  * @see https://ejs.co/#docs
  * */
