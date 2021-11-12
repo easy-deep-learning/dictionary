@@ -1,8 +1,8 @@
 {
-  "name": "client-server-express",
+  "name": "dictionary",
+  "private": true,
   "version": "1.0.0",
   "description": "",
-  "private": true,
   "main": "backend-src/index.js",
   "scripts": {
     "start-server": "env $(cat ./.env.local) nodemon",
