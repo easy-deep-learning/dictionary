@@ -25,6 +25,6 @@ const Schema = new mongoose.Schema({
   examples: [ExampleSchema],
 })
 
-const Word = mongoose.model('Word', Schema)
+const Word = mongoose.models.Word || mongoose.model('Word', Schema)
 
 module.exports = { Word }
