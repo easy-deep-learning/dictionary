@@ -2,7 +2,7 @@ import { Input } from 'antd'
 const { Search } = Input
 
 const SearchWords = () => {
-  const onSearch = (query) => {
+  const onSearch = (query: string) => {
     console.log('query: ', query) // eslint-disable-line
   }
 
