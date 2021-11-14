@@ -17,8 +17,8 @@ export default async function handler(
 
     switch (method) {
       case 'GET':
-        const result = await Word.find()
-        res.status(200).send({ result })
+        const wordsListData = await Word.find()
+        res.status(200).send({ wordsListData })
         break
       case 'POST':
         const word = new Word({ ...req.body })

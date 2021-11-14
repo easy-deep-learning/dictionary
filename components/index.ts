@@ -1,1 +1,6 @@
 export { Footer } from './Footer'
+export { SearchWords } from './SearchWords'
+export { WordItem } from './WordItem'
+export type { WordItemProps } from './WordItem'
+export { WordList } from './WordList'
+export type { WordListProps } from './WordList'
