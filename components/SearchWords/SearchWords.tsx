@@ -1,10 +1,17 @@
+import { useState, useEffect } from 'react'
 import { Input } from 'antd'
 const { Search } = Input
 
 const SearchWords = () => {
   const onSearch = (query: string) => {
-    console.log('query: ', query) // eslint-disable-line
+    fetch(`/api/search?word=${query}`)
+      .then((result) => result.json())
+      .then((data) => {
+        console.log('data: ', data) // eslint-disable-line
+      })
+      .catch((error) => console.log(error))
   }
+  const [searchResult, setSearchResult] = useState([])
 
   return (
     <Search
