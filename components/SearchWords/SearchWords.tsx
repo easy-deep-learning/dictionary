@@ -1,5 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Input } from 'antd'
+
+import { WordList } from '../../components'
+
 const { Search } = Input
 
 const SearchWords = () => {
@@ -7,19 +10,24 @@ const SearchWords = () => {
     fetch(`/api/search?word=${query}`)
       .then((result) => result.json())
       .then((data) => {
-        console.log('data: ', data) // eslint-disable-line
+        setSearchResult(data.wordsListData)
       })
       .catch((error) => console.log(error))
   }
   const [searchResult, setSearchResult] = useState([])
 
   return (
-    <Search
-      placeholder="введите слово"
-      enterButton="Найти!"
-      size="large"
-      onSearch={onSearch}
-    />
+    <div>
+      <Search
+        placeholder="введите слово"
+        enterButton="Найти!"
+        size="large"
+        onSearch={onSearch}
+      />
+      <div>
+        {searchResult.length > 0 && <WordList wordsListData={searchResult} />}
+      </div>
+    </div>
   )
 }
 
