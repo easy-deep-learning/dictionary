@@ -1,4 +1,4 @@
-import { List } from 'antd'
+import { List, Button } from 'antd'
 
 export type WordItemProps = {
   _id: string
@@ -39,6 +39,8 @@ const WordItem = (props: WordItemProps) => {
           renderItem={(translation) => <List.Item>{translation}</List.Item>}
         />
       </div>
+
+      <Button>Edit</Button>
     </div>
   )
 }
