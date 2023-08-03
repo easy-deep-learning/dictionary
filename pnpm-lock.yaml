@@ -1521,7 +1521,7 @@ packages:
       copy-to-clipboard: 3.3.1
       lodash: 4.17.21
       memoize-one: 6.0.0
-      moment: 2.29.1
+      moment: 2.29.4
       rc-cascader: 3.2.1(react-dom@17.0.2)(react@17.0.2)
       rc-checkbox: 2.3.2(react-dom@17.0.2)(react@17.0.2)
       rc-collapse: 3.1.2(react-dom@17.0.2)(react@17.0.2)
@@ -3748,8 +3748,8 @@ packages:
     resolution: {integrity: sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==}
     dev: true
 
-  /moment@2.29.1:
-    resolution: {integrity: sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==}
+  /moment@2.29.4:
+    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
     dev: false
 
   /mongodb-connection-string-url@2.6.0:
@@ -4557,7 +4557,7 @@ packages:
       classnames: 2.3.1
       date-fns: 2.28.0
       dayjs: 1.10.7
-      moment: 2.29.1
+      moment: 2.29.4
       rc-trigger: 5.2.10(react-dom@17.0.2)(react@17.0.2)
       rc-util: 5.17.0(react-dom@17.0.2)(react@17.0.2)
       react: 17.0.2
